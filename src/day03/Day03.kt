@@ -46,32 +46,36 @@ object Day03 : Solution {
     }
 
     override fun part2(input: List<String>): Any {
-        var numberOfZeroOneOxy: ArrayList<Pair<Int, Int>>
-        var numberOfZeroOneCarbon: ArrayList<Pair<Int, Int>>
-        var filteredOxygen = input
-        var filteredCarbon = input
-
-
-        for (index in 0 until input.first().length) {
-            if (filteredOxygen.size > 1) {
-                numberOfZeroOneOxy = countZeroOne(filteredOxygen)
-                val pairOxygen = numberOfZeroOneOxy[index]
-                val maxBit = if (pairOxygen.first > pairOxygen.second) '0' else '1'
-                filteredOxygen = filteredOxygen.filter { it[index] == maxBit }
-            }
-
-            if (filteredCarbon.size > 1) {
-                numberOfZeroOneCarbon = countZeroOne(filteredCarbon)
-                val pairCarbon = numberOfZeroOneCarbon[index]
-                val minBit = if (pairCarbon.first <= pairCarbon.second) '0' else '1'
-                filteredCarbon = filteredCarbon.filter { it[index] == minBit }
-            }
-        }
-
-        val oxygenRating = filteredOxygen.first().toDecimal()
-        val carbonRating = filteredCarbon.first().toDecimal()
+        val oxygenRating = getRating(input)
+        val carbonRating = getRating(input, false)
 
         return oxygenRating * carbonRating
+    }
+
+    /**
+     * Returns oxygen rating or carbon rating based on [ratingFor].
+     *
+     * @param ratingFor Pass true for oxygen, false for carbon
+     */
+    private fun getRating(input: List<String>, ratingFor: Boolean = true): Int {
+        var numberOfZeroOne: ArrayList<Pair<Int, Int>>
+        var filteredNumbers = input
+
+        for (index in 0 until input.first().length) {
+            if (filteredNumbers.size > 1) {
+                numberOfZeroOne = countZeroOne(filteredNumbers)
+                val zeroOneFreq = numberOfZeroOne[index]
+
+                val checkBit = if (ratingFor) {
+                    if (zeroOneFreq.first > zeroOneFreq.second) '0' else '1'
+                } else {
+                    if (zeroOneFreq.first <= zeroOneFreq.second) '0' else '1'
+                }
+
+                filteredNumbers = filteredNumbers.filter { it[index] == checkBit }
+            }
+        }
+        return filteredNumbers.first().toDecimal()
     }
 }
 
