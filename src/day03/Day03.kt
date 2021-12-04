@@ -12,7 +12,6 @@ object Day03 : Solution {
             numberOfZeroOne.add(Pair(0, 0))
         }
 
-
         input.forEach { number ->
             number.forEachIndexed { index, bit ->
                 val currentCount = numberOfZeroOne[index]
@@ -46,10 +45,33 @@ object Day03 : Solution {
         return gammaRate.toDecimal() * epsilonRate.toDecimal()
     }
 
-
-
     override fun part2(input: List<String>): Any {
-        return ""
+        var numberOfZeroOneOxy: ArrayList<Pair<Int, Int>>
+        var numberOfZeroOneCarbon: ArrayList<Pair<Int, Int>>
+        var filteredOxygen = input
+        var filteredCarbon = input
+
+
+        for (index in 0 until input.first().length) {
+            if (filteredOxygen.size > 1) {
+                numberOfZeroOneOxy = countZeroOne(filteredOxygen)
+                val pairOxygen = numberOfZeroOneOxy[index]
+                val maxBit = if (pairOxygen.first > pairOxygen.second) '0' else '1'
+                filteredOxygen = filteredOxygen.filter { it[index] == maxBit }
+            }
+
+            if (filteredCarbon.size > 1) {
+                numberOfZeroOneCarbon = countZeroOne(filteredCarbon)
+                val pairCarbon = numberOfZeroOneCarbon[index]
+                val minBit = if (pairCarbon.first <= pairCarbon.second) '0' else '1'
+                filteredCarbon = filteredCarbon.filter { it[index] == minBit }
+            }
+        }
+
+        val oxygenRating = filteredOxygen.first().toDecimal()
+        val carbonRating = filteredCarbon.first().toDecimal()
+
+        return oxygenRating * carbonRating
     }
 }
 
